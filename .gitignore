@@ -1,0 +1,33 @@
+# 依赖
+node_modules/
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 运行时数据
+*.log
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# IDE/编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# AI 工具配置
+.claude/
+
+# 构建输出
+dist/
+build/
+out/
+
+# 本地环境配置
+.env
+.env.local
+PROGRESS.md

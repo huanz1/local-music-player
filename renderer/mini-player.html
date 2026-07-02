@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; media-src 'self' file: blob:; img-src 'self' file: blob: data:;">
+  <title>Mini Player</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: rgba(26, 26, 46, 0.92);
+      backdrop-filter: blur(10px);
+      color: #e0e0e0;
+      height: 100vh;
+      overflow: hidden;
+      border-radius: 12px;
+      -webkit-app-region: drag;
+      user-select: none;
+    }
+    .mini-container {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 8px 16px;
+      gap: 12px;
+    }
+    .mini-cover {
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .mini-info {
+      flex: 1;
+      min-width: 0;
+      -webkit-app-region: no-drag;
+    }
+    .mini-title {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+    .mini-artist {
+      font-size: 11px;
+      color: #999;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+    .mini-controls {
+      display: flex;
+      gap: 8px;
+      -webkit-app-region: no-drag;
+    }
+    .mini-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: #e0e0e0;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .mini-btn:hover { background: rgba(255,255,255,0.2); }
+    .mini-btn-play { font-size: 18px; }
+    .mini-btn-close {
+      background: transparent;
+      font-size: 16px;
+      -webkit-app-region: no-drag;
+    }
+    .mini-btn-close:hover { background: rgba(255,80,80,0.4); }
+  </style>
+</head>
+<body>
+  <div class="mini-container">
+    <div class="mini-cover" id="mini-cover">🎵</div>
+    <div class="mini-info">
+      <span class="mini-title" id="mini-title" data-i18n="mini.no-track">No track</span>
+      <span class="mini-artist" id="mini-artist">—</span>
+    </div>
+    <div class="mini-controls">
+      <button class="mini-btn" id="mini-prev" data-i18n-title="mini.previous" title="Previous">⏮</button>
+      <button class="mini-btn mini-btn-play" id="mini-play" data-i18n-title="mini.play-pause" title="Play/Pause">▶️</button>
+      <button class="mini-btn" id="mini-next" data-i18n-title="mini.next" title="Next">⏭</button>
+      <button class="mini-btn mini-btn-close" id="mini-close" data-i18n-title="mini.restore" title="Restore">🗖</button>
+    </div>
+  </div>
+  <script src="js/i18n.js"></script>
+  <script src="js/mini-player.js"></script>
+</body>
+</html>

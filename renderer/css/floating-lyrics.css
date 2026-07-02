@@ -1,0 +1,224 @@
+/* ===== Floating Lyrics Window ===== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ===== Control Bar ===== */
+
+.floating-control-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 4px;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 100;
+  -webkit-app-region: drag;
+  border-radius: 8px 8px 0 0;
+}
+
+body:hover .floating-control-bar {
+  opacity: 1;
+}
+
+.floating-control-bar-drag {
+  flex: 1;
+  height: 100%;
+  -webkit-app-region: drag;
+}
+
+.floating-close-btn {
+  -webkit-app-region: no-drag;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.floating-close-btn:hover {
+  background: rgba(232, 17, 35, 0.9);
+  color: #fff;
+}
+
+/* ===== Resize Handles ===== */
+
+.resize-handle {
+  position: fixed;
+  z-index: 200;
+  -webkit-app-region: no-drag;
+}
+
+.resize-n {
+  top: 0;
+  left: 8px;
+  right: 8px;
+  height: 5px;
+  cursor: n-resize;
+}
+
+.resize-s {
+  bottom: 0;
+  left: 8px;
+  right: 8px;
+  height: 5px;
+  cursor: s-resize;
+}
+
+.resize-e {
+  right: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 5px;
+  cursor: e-resize;
+}
+
+.resize-w {
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 5px;
+  cursor: w-resize;
+}
+
+.resize-nw {
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nw-resize;
+}
+
+.resize-ne {
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  cursor: ne-resize;
+}
+
+.resize-sw {
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  cursor: sw-resize;
+}
+
+.resize-se {
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  cursor: se-resize;
+}
+
+/* ===== Window Border on Hover ===== */
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 50;
+}
+
+body:hover::after {
+  opacity: 1;
+}
+
+/* ===== Main Content ===== */
+
+.floating-lyrics {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  -webkit-app-region: drag;
+}
+
+.lyrics-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  max-height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 40px 0;
+  -webkit-app-region: no-drag;
+}
+
+.lyrics-lines::-webkit-scrollbar {
+  display: none;
+}
+
+.lyrics-floating-line {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 4px 16px;
+  border-radius: 8px;
+  line-height: 1.6;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.lyrics-floating-line:hover {
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lyrics-floating-line.active {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(233, 69, 96, 0.30);
+  text-shadow: 0 2px 8px rgba(233, 69, 96, 0.6);
+  padding: 6px 24px;
+}
+
+.lyrics-floating-line.past {
+  color: rgba(255, 255, 255, 0.20);
+}
+
+.lyrics-empty-floating {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}

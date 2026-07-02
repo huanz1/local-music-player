@@ -1,0 +1,77 @@
+/* ===== Lyrics Panel ===== */
+
+.lyrics-content {
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 100%;
+}
+
+.lyrics-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.lyrics-empty .empty-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+.lyrics-empty p {
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
+.lyrics-empty .empty-hint {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.lyrics-line {
+  padding: 4px 8px;
+  font-size: 13px;
+  color: var(--lyrics-inactive);
+  text-align: center;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.lyrics-line:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.lyrics-line.active {
+  color: var(--lyrics-active);
+  font-size: 16px;
+  font-weight: 700;
+  background: var(--bg-active);
+}
+
+.lyrics-line.past {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* Floating lyrics button active state */
+.icon-btn.active {
+  background: var(--bg-active);
+  color: var(--accent-primary);
+}
+
+.lyrics-no-sync {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 12px;
+  text-align: center;
+  padding: 8px;
+}

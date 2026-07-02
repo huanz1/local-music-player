@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; media-src 'self' file: blob:; img-src 'self' file: blob: data:; connect-src 'self' file:;">
+  <title>Music Player</title>
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/player.css">
+  <link rel="stylesheet" href="css/playlist.css">
+  <link rel="stylesheet" href="css/equalizer.css">
+  <link rel="stylesheet" href="css/visualizer.css">
+  <link rel="stylesheet" href="css/lyrics.css">
+</head>
+<body class="theme-dark">
+
+  <!-- Audio element hidden, controlled by Web Audio API -->
+  <audio id="audio-element" preload="auto"></audio>
+
+  <div class="app-container">
+
+    <!-- Top Status Bar -->
+    <header class="app-header">
+      <div class="header-left">
+        <span class="app-logo" data-i18n="app.logo">🎵 Music Player</span>
+      </div>
+      <div class="header-center">
+        <span id="playback-mode-icon" class="mode-icon" data-i18n-title="mode.sequential" title="Sequential">▶️</span>
+      </div>
+      <div class="header-right">
+        <button id="btn-toggle-eq" class="header-btn" data-i18n-title="btn.equalizer" title="Equalizer">🎚️</button>
+        <button id="btn-toggle-lyrics" class="header-btn" data-i18n-title="btn.lyrics" title="Lyrics">🎤</button>
+        <button id="btn-toggle-theme" class="header-btn" data-i18n-title="btn.theme" title="Toggle Theme">🌓</button>
+        <button id="btn-toggle-mini" class="header-btn" data-i18n-title="btn.mini-player" title="Mini Player">🪟</button>
+        <button id="btn-language" class="header-btn" data-i18n-title="btn.language" title="Language">🌐</button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Left Panel: Playlist -->
+      <aside id="playlist-panel" class="panel panel-left">
+        <div class="panel-header">
+          <h3 data-i18n="playlist.title">Playlist</h3>
+          <div class="panel-header-actions">
+            <span id="playlist-count" class="track-count" data-i18n="playlist.count.zero">0 tracks</span>
+            <button id="btn-add-files" class="icon-btn" data-i18n-title="btn.add-files" title="Add Files (Ctrl+O)">📂</button>
+            <button id="btn-add-folder" class="icon-btn" data-i18n-title="btn.add-folder" title="Add Folder (Ctrl+Shift+O)">📁</button>
+            <button id="btn-clear-playlist" class="icon-btn" data-i18n-title="btn.clear-playlist" title="Clear Playlist">🗑️</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div id="playlist-container" class="playlist-list">
+            <div class="playlist-empty">
+              <div class="empty-icon">🎶</div>
+              <p data-i18n="playlist.empty.title">No tracks added</p>
+              <p class="empty-hint" data-i18n="playlist.empty.hint">Drag & drop music files here, or click 📂 to browse</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <button id="btn-import" class="footer-btn" data-i18n="btn.import">Import</button>
+          <button id="btn-export" class="footer-btn" data-i18n="btn.export">Export</button>
+          <select id="history-select" class="history-dropdown">
+            <option value="" data-i18n="history.label">— History —</option>
+          </select>
+        </div>
+      </aside>
+
+      <!-- Center: Visualizer -->
+      <main class="panel panel-center">
+        <div id="visualizer-container" class="visualizer-container">
+          <canvas id="visualizer-canvas"></canvas>
+          <div class="visualizer-overlay" id="visualizer-overlay">
+            <div class="now-playing-info">
+              <div id="cover-art" class="cover-art-placeholder">🎵</div>
+              <div class="track-info">
+                <h2 id="now-playing-title" data-i18n="now-playing.no-track">No track playing</h2>
+                <p id="now-playing-artist" data-i18n="now-playing.select-track">Select a track to start</p>
+                <p id="now-playing-album"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="equalizer-panel" class="eq-panel hidden">
+          <div class="eq-header">
+            <h4 data-i18n="eq.title">Equalizer</h4>
+            <select id="eq-preset-select" class="eq-preset-dropdown">
+              <option value="Flat">Flat</option>
+              <option value="Rock">Rock</option>
+              <option value="Pop">Pop</option>
+              <option value="Jazz">Jazz</option>
+              <option value="Classical">Classical</option>
+              <option value="Hip-Hop">Hip-Hop</option>
+              <option value="Electronic">Electronic</option>
+              <option value="Custom">Custom</option>
+            </select>
+            <button id="btn-reset-eq" class="icon-btn-small">↺</button>
+          </div>
+          <div id="eq-sliders-container" class="eq-sliders">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Panel: Lyrics -->
+      <aside id="lyrics-panel" class="panel panel-right">
+        <div class="panel-header">
+          <h3 data-i18n="lyrics.title">Lyrics</h3>
+          <div class="panel-header-actions">
+            <button id="btn-load-lrc" class="icon-btn" data-i18n-title="btn.load-lrc" title="Load LRC File">📄</button>
+            <button id="btn-float-lyrics" class="icon-btn" data-i18n-title="btn.float-lyrics" title="Floating Lyrics">🪟</button>
+            <span id="lyrics-offset-display" class="offset-display">+0.0s</span>
+            <button id="btn-lyrics-offset-minus" class="icon-btn-small">−</button>
+            <button id="btn-lyrics-offset-plus" class="icon-btn-small">+</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div id="lyrics-container" class="lyrics-content">
+            <div class="lyrics-empty">
+              <div class="empty-icon">🎤</div>
+              <p data-i18n="lyrics.empty.title">No lyrics available</p>
+              <p class="empty-hint" data-i18n="lyrics.empty.hint">Load a .lrc file or auto-detect</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Bottom Player Bar -->
+    <footer class="player-bar">
+      <div class="player-bar-left">
+        <div class="mini-info">
+          <span id="mini-title" class="mini-title" data-i18n="player.no-track">No track</span>
+          <span id="mini-artist" class="mini-artist">—</span>
+        </div>
+      </div>
+
+      <div class="player-bar-center">
+        <div class="playback-controls">
+          <button id="btn-shuffle" class="ctrl-btn mode-btn" data-i18n-title="btn.shuffle" title="Shuffle">🔀</button>
+          <button id="btn-prev" class="ctrl-btn" data-i18n-title="btn.previous" title="Previous">⏮</button>
+          <button id="btn-play" class="ctrl-btn btn-play-pause" data-i18n-title="btn.play-pause" title="Play / Pause (Space)">▶️</button>
+          <button id="btn-next" class="ctrl-btn" data-i18n-title="btn.next" title="Next">⏭</button>
+          <button id="btn-repeat" class="ctrl-btn mode-btn" data-i18n-title="btn.repeat.off" title="Repeat">🔁</button>
+        </div>
+        <div class="seek-container">
+          <span id="time-current" class="time-display">0:00</span>
+          <div id="seek-bar-container" class="seek-bar-track">
+            <div id="seek-bar-progress" class="seek-bar-progress"></div>
+            <div id="seek-bar-thumb" class="seek-bar-thumb"></div>
+          </div>
+          <span id="time-total" class="time-display">0:00</span>
+        </div>
+      </div>
+
+      <div class="player-bar-right">
+        <button id="btn-favorite" class="ctrl-btn" data-i18n-title="btn.favorite" title="Favorite">🤍</button>
+        <div class="volume-control">
+          <span id="volume-icon" class="volume-icon">🔊</span>
+          <div id="volume-slider-container" class="volume-track">
+            <div id="volume-progress" class="volume-progress"></div>
+            <div id="volume-thumb" class="volume-thumb"></div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Context Menu -->
+  <div id="context-menu" class="context-menu hidden">
+    <div class="context-menu-item" data-action="play" data-i18n="ctx.play">▶ Play</div>
+    <div class="context-menu-item" data-action="remove" data-i18n="ctx.remove">🗑️ Remove</div>
+    <div class="context-menu-item" data-action="show-in-folder" data-i18n="ctx.show-in-folder">📂 Show in Folder</div>
+    <div class="context-menu-separator"></div>
+    <div class="context-menu-item" data-action="edit-tags" data-i18n="ctx.edit-tags">✏️ Edit Tags</div>
+    <div class="context-menu-item" data-action="add-to-favorites" data-i18n="ctx.add-to-favorites">🤍 Add to Favorites</div>
+  </div>
+
+  <!-- ID3 Tag Editor Dialog -->
+  <div id="tag-editor-dialog" class="dialog-overlay hidden">
+    <div class="dialog">
+      <h3 data-i18n="dialog.edit-title">Edit Track Info</h3>
+      <div class="dialog-fields">
+        <label data-i18n="label.title">Title</label>
+        <input type="text" id="edit-title">
+        <label data-i18n="label.artist">Artist</label>
+        <input type="text" id="edit-artist">
+        <label data-i18n="label.album">Album</label>
+        <input type="text" id="edit-album">
+        <label data-i18n="label.year">Year</label>
+        <input type="number" id="edit-year" min="1900" max="2099">
+        <label data-i18n="label.genre">Genre</label>
+        <input type="text" id="edit-genre">
+        <label data-i18n="label.track-number">Track Number</label>
+        <input type="number" id="edit-track" min="1" max="999">
+      </div>
+      <div class="dialog-actions">
+        <button id="btn-cancel-edit" class="dialog-btn secondary" data-i18n="btn.cancel">Cancel</button>
+        <button id="btn-save-edit" class="dialog-btn primary" data-i18n="btn.save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="playlist-search">
+    <input type="text" id="playlist-search-input" data-i18n-placeholder="search.placeholder" placeholder="🔍 Search playlist..." class="search-input">
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/audio-engine.js"></script>
+  <script src="js/playlist.js"></script>
+  <script src="js/playlist-ui.js"></script>
+  <script src="js/equalizer.js"></script>
+  <script src="js/visualizer.js"></script>
+  <script src="js/lyrics.js"></script>
+  <script src="js/controls-ui.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/history.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/import-export.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

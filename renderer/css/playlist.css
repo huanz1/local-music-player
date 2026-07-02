@@ -1,0 +1,274 @@
+/* ===== Playlist ===== */
+
+.playlist-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.playlist-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.playlist-empty .empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.playlist-empty p {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.playlist-empty .empty-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* ===== Track Item ===== */
+
+.track-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-left: 3px solid transparent;
+  gap: 8px;
+  position: relative;
+}
+
+.track-item:hover {
+  background: var(--bg-hover);
+}
+
+.track-item.active {
+  background: var(--bg-active);
+  border-left-color: var(--accent-primary);
+}
+
+.track-item.playing {
+  background: var(--bg-active);
+  border-left-color: var(--accent-primary);
+}
+
+.track-item.playing .track-index {
+  color: var(--accent-primary);
+}
+
+.track-item.drag-over {
+  border-top: 2px solid var(--accent-primary);
+}
+
+.track-index {
+  width: 22px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.track-item.playing .track-index::before {
+  content: '♪';
+  animation: pulse-note 1s infinite;
+}
+
+@keyframes pulse-note {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.track-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.track-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-artist {
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-duration {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.track-favorite {
+  font-size: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.track-item:hover .track-favorite {
+  opacity: 1;
+}
+.track-favorite.favorited {
+  opacity: 1;
+  color: var(--favorite-color);
+}
+
+/* ===== Context Menu ===== */
+
+.context-menu {
+  position: fixed;
+  background: var(--context-menu-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  padding: 4px;
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.context-menu-item {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s;
+}
+
+.context-menu-item:hover {
+  background: var(--bg-hover);
+}
+
+.context-menu-item.danger {
+  color: var(--accent-primary);
+}
+
+.context-menu-separator {
+  height: 1px;
+  background: var(--border-color);
+  margin: 4px 8px;
+}
+
+/* ===== Drag & Drop ===== */
+
+.track-item[draggable="true"] {
+  cursor: grab;
+}
+
+.track-item[draggable="true"]:active {
+  cursor: grabbing;
+  opacity: 0.7;
+}
+
+/* ===== Dialog ===== */
+
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--dialog-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.dialog {
+  background: var(--dialog-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 24px;
+  min-width: 360px;
+  max-width: 480px;
+  box-shadow: var(--shadow-lg);
+}
+
+.dialog h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.dialog-fields {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 8px 12px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.dialog-fields label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.dialog-fields input {
+  padding: 6px 10px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 13px;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.dialog-fields input:focus {
+  border-color: var(--input-focus);
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.dialog-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dialog-btn.primary {
+  background: var(--accent-primary);
+  color: white;
+}
+.dialog-btn.primary:hover {
+  opacity: 0.9;
+}
+
+.dialog-btn.secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--text-secondary);
+}
+.dialog-btn.secondary:hover {
+  background: var(--btn-secondary-hover);
+}

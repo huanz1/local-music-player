@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+  <title>Floating Lyrics</title>
+  <link rel="stylesheet" href="css/floating-lyrics.css">
+</head>
+<body>
+  <!-- Control bar (visible on hover) -->
+  <div class="floating-control-bar">
+    <div class="floating-control-bar-drag"></div>
+    <button class="floating-close-btn" title="关闭">&#x2715;</button>
+  </div>
+
+  <!-- Resize handles -->
+  <div class="resize-handle resize-n" data-dir="n"></div>
+  <div class="resize-handle resize-s" data-dir="s"></div>
+  <div class="resize-handle resize-e" data-dir="e"></div>
+  <div class="resize-handle resize-w" data-dir="w"></div>
+  <div class="resize-handle resize-nw" data-dir="nw"></div>
+  <div class="resize-handle resize-ne" data-dir="ne"></div>
+  <div class="resize-handle resize-sw" data-dir="sw"></div>
+  <div class="resize-handle resize-se" data-dir="se"></div>
+
+  <!-- Main content -->
+  <div id="lyrics-floating-container" class="floating-lyrics">
+    <div id="floating-lyrics-content" class="lyrics-lines">
+      <div class="lyrics-empty-floating" data-i18n="lyrics.floating.empty">No lyrics loaded</div>
+    </div>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/floating-lyrics.js"></script>
+</body>
+</html>
